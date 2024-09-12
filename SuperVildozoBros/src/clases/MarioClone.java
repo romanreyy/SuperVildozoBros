@@ -16,7 +16,8 @@ public class MarioClone extends JPanel implements KeyListener, ActionListener {
 
     private Player player;
     private List<Enemy> enemies;
-    private List<Platform> platforms;
+    private List<Platform> platforms; // Plataformas flotantes
+    private List<GroundObstacle> groundObstacles; // Obstáculos en el suelo
     private List<Coin> coins;
     private Flag flag; // Bandera para pasar de nivel
     private int score;
@@ -45,24 +46,34 @@ public class MarioClone extends JPanel implements KeyListener, ActionListener {
     }
 
     private void initializeGame() {
-        player = new Player(50, GROUND_Y - 50, GRAVITY);
+        player = new Player(50, GROUND_Y - 100, GRAVITY);
         enemies = new ArrayList<>();
         platforms = new ArrayList<>();
+        groundObstacles = new ArrayList<>();
         coins = new ArrayList<>();
         score = 0;
         cameraX = 0;
 
-        // Add platforms, enemies, and coins
+        // Añadir plataformas flotantes
         for (int i = 0; i < 10; i++) {
-            platforms.add(new Platform(i * 200, GROUND_Y - 100 - (i % 3) * 50, 150, 20));
+            int platformY = GROUND_Y - 100 - (i % 4) * 50;
+            platforms.add(new Platform(i * 200, platformY, 150, 20));
+        }
+
+        // Añadir algunos obstáculos en el suelo con menor altura
+        for (int i = 0; i < 5; i++) {
+            groundObstacles.add(new GroundObstacle(i * 300, GROUND_Y - 40, 50, 20)); // Ajustar altura de la caja
+        }
+
+        // Añadir enemigos y monedas
+        for (int i = 0; i < 10; i++) {
             enemies.add(new Enemy(i * 250 + 100, GROUND_Y - 30));
             coins.add(new Coin(i * 180 + 50, GROUND_Y - 150 - (i % 3) * 50));
         }
 
-        // Add the flag
-        flag = new Flag(3000, GROUND_Y - 100); // Adjust position as needed
+        // Añadir la bandera
+        flag = new Flag(3000, GROUND_Y - 100);
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -75,6 +86,9 @@ public class MarioClone extends JPanel implements KeyListener, ActionListener {
         // Dibujar elementos del juego
         for (Platform platform : platforms) {
             platform.draw(g, cameraX);
+        }
+        for (GroundObstacle groundObstacle : groundObstacles) {
+            groundObstacle.draw(g, cameraX);
         }
         for (Enemy enemy : enemies) {
             enemy.draw(g, cameraX);
@@ -114,11 +128,18 @@ public class MarioClone extends JPanel implements KeyListener, ActionListener {
             enemy.update();
         }
 
-        // Colisiones con plataformas
-        player.isOnGround = false;
+        // Colisiones con plataformas flotantes
+        player.isOnGround = false; // Reiniciar el estado del suelo
         for (Platform platform : platforms) {
             if (player.collidesWith(platform)) {
                 player.handleCollision(platform);
+            }
+        }
+
+        // Colisiones con obstáculos en el suelo
+        for (GroundObstacle groundObstacle : groundObstacles) {
+            if (player.collidesWith(groundObstacle)) {
+                player.handleCollision(groundObstacle);
             }
         }
 
@@ -145,13 +166,12 @@ public class MarioClone extends JPanel implements KeyListener, ActionListener {
             // Aquí puedes añadir la lógica para pasar al siguiente nivel o finalizar el juego
         }
 
-        // Gravedad si no está en el suelo
-        if (!player.isOnGround) {
-            player.velocityY += GRAVITY;
-        }
-
         // Mantener al jugador dentro de los límites
-        player.y = Math.min(player.y, GROUND_Y - player.height);
+        if (player.y > GROUND_Y - player.height) {
+            player.y = GROUND_Y - player.height;
+            player.velocityY = 0;
+            player.isOnGround = true;
+        }
     }
 
     @Override
@@ -210,7 +230,7 @@ class Player extends GameObject {
     private int gravity;
 
     Player(int x, int y, int gravity) {
-        super(x, y, 30, 50);
+        super(x, y, 30, 50); // Asegúrate de que el tamaño sea visible
         this.gravity = gravity;
     }
 
@@ -231,22 +251,34 @@ class Player extends GameObject {
         x += velocityX;
         y += velocityY;
 
-        // Apply gravity
+        // Aplicar gravedad si no está en el suelo
         if (!isOnGround) {
             velocityY += gravity;
         }
     }
 
-    void handleCollision(Platform platform) {
-        if (velocityY > 0 && y + height > platform.y && y < platform.y) {
-            y = platform.y - height;
-            velocityY = 0;
-            isOnGround = true;
+    void handleCollision(GameObject obj) {
+        // Ajusta el jugador para que no atraviese los obstáculos
+        if (obj instanceof Platform || obj instanceof GroundObstacle) {
+            if (velocityY > 0 && y + height > obj.y && y < obj.y) {
+                y = obj.y - height;
+                velocityY = 0;
+                isOnGround = true;
+            } else if (velocityY < 0 && y < obj.y + obj.height && y + height > obj.y + obj.height) {
+                y = obj.y + obj.height;
+                velocityY = 0;
+            }
+
+            if (velocityX > 0 && x + width > obj.x && x < obj.x) {
+                x = obj.x - width;
+            } else if (velocityX < 0 && x < obj.x + obj.width && x + width > obj.x + obj.width) {
+                x = obj.x + obj.width;
+            }
         }
     }
 
     void hit() {
-        // Logic when the player is hit
+        // Lógica cuando el jugador es golpeado
         System.out.println("Player hit!");
     }
 
@@ -256,7 +288,6 @@ class Player extends GameObject {
         super.draw(g, cameraX);
     }
 }
-
 
 // Clase para los enemigos
 class Enemy extends GameObject {
@@ -279,7 +310,7 @@ class Enemy extends GameObject {
     }
 }
 
-// Clase para las plataformas
+// Clase para las plataformas flotantes
 class Platform extends GameObject {
     Platform(int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -288,6 +319,19 @@ class Platform extends GameObject {
     @Override
     void draw(Graphics g, int cameraX) {
         g.setColor(Color.GRAY);
+        super.draw(g, cameraX);
+    }
+}
+
+// Clase para los obstáculos en el suelo
+class GroundObstacle extends GameObject {
+    GroundObstacle(int x, int y, int width, int height) {
+        super(x, y, width, height);
+    }
+
+    @Override
+    void draw(Graphics g, int cameraX) {
+        g.setColor(Color.DARK_GRAY);
         super.draw(g, cameraX);
     }
 }
@@ -308,7 +352,7 @@ class Coin extends GameObject {
 // Clase para la bandera
 class Flag extends GameObject {
     Flag(int x, int y) {
-        super(x, y, 30, 60); // Ajusta el tamaño según sea necesario
+        super(x, y, 20, 80); // Ajusta el tamaño de la bandera
     }
 
     @Override

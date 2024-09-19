@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
     public static void main(String[] args) {
@@ -17,42 +18,114 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Player player;
     private ArrayList<Box> boxes;
     private ArrayList<Platform> platforms;
+    private ArrayList<holes> holes;
     private Timer timer;
     private int cameraX = 0;
     private int playerLives = 3;
     private boolean gameOver = false;
+    private Flag flag;
+    private int levelWidth = 12000; // Ancho del nivel extendido
+    private int groundLevel = 500; // Nivel del suelo
+    private int skyLevel = 150; // Nivel del "cielo" para las plataformas
+    private int boxSize = 50; // Tamaño de las cajas
+    private int platformWidth = 100; // Ancho de las plataformas
+    private int platformHeight = 20; // Alto de las plataformas
 
     public GamePanel() {
-        setFocusable(true);
+    	setFocusable(true);
         addKeyListener(this);
-        player = new Player(50, 300);
+        player = new Player(50, groundLevel - 50);
         boxes = new ArrayList<>();
         platforms = new ArrayList<>();
+        holes = new ArrayList<>();
 
-        // Crear cajas en el suelo
-        boxes.add(new Box(100, 350));
-        boxes.add(new Box(250, 350));
-        boxes.add(new Box(400, 350));
-        boxes.add(new Box(550, 350));
-        boxes.add(new Box(700, 350));
+        // Definir muchas cajas en posiciones fijas a lo largo del nivel
+        boxes.add(new Box(200, groundLevel - 150));  
+        boxes.add(new Box(400, groundLevel - 150));  
+        boxes.add(new Box(700, groundLevel - 150));  
+        boxes.add(new Box(1000, groundLevel - 150));  
+        boxes.add(new Box(1200, groundLevel - 150));  
+        boxes.add(new Box(1500, groundLevel - 150));  
+        boxes.add(new Box(2000, groundLevel - 150));  
+        boxes.add(new Box(2300, groundLevel - 150));  
+        boxes.add(new Box(2900, groundLevel - 150));  
+        boxes.add(new Box(3400, groundLevel - 150));  
+        boxes.add(new Box(3900, groundLevel - 150));  
+        boxes.add(new Box(4300, groundLevel - 150));  
+        boxes.add(new Box(4700, groundLevel - 150));  
+        boxes.add(new Box(5100, groundLevel - 150));  
+        boxes.add(new Box(5500, groundLevel - 150));  
+        boxes.add(new Box(5900, groundLevel - 150));  
+        boxes.add(new Box(6300, groundLevel - 150));  
+        boxes.add(new Box(6700, groundLevel - 150));  
+        boxes.add(new Box(7100, groundLevel - 150));  
+        boxes.add(new Box(7500, groundLevel - 150));  
 
-        // Crear plataformas en el aire (ahora más bajas)
-        platforms.add(new Platform(150, 280, 100, 20));
-        platforms.add(new Platform(350, 250, 100, 20));
-        platforms.add(new Platform(550, 220, 100, 20));
-        platforms.add(new Platform(750, 250, 100, 20));
-        platforms.add(new Platform(950, 280, 100, 20));
+        // Definir muchas plataformas en posiciones fijas a lo largo del nivel
+        platforms.add(new Platform(300, groundLevel - 250, platformWidth, platformHeight));  
+        platforms.add(new Platform(400, groundLevel - 300, platformWidth, platformHeight));  
+        platforms.add(new Platform(600, groundLevel - 300, platformWidth, platformHeight));  
+        platforms.add(new Platform(900, groundLevel - 250, platformWidth, platformHeight));  
+        platforms.add(new Platform(1100, groundLevel - 270, platformWidth, platformHeight));  
+        platforms.add(new Platform(1500, groundLevel - 250, platformWidth, platformHeight));  
+        platforms.add(new Platform(1800, groundLevel - 270, platformWidth, platformHeight));  
+        platforms.add(new Platform(2100, groundLevel - 265, platformWidth, platformHeight));  
+        platforms.add(new Platform(2500, groundLevel - 250, platformWidth, platformHeight));  
+        platforms.add(new Platform(3000, groundLevel - 300, platformWidth, platformHeight));  
+        platforms.add(new Platform(3200, groundLevel - 250, platformWidth, platformHeight));  
+        platforms.add(new Platform(3500, groundLevel - 280, platformWidth, platformHeight));  
+        platforms.add(new Platform(3700, groundLevel - 250, platformWidth, platformHeight));  
+        platforms.add(new Platform(4300, groundLevel - 250, platformWidth, platformHeight));  
+        platforms.add(new Platform(5000, groundLevel - 280, platformWidth, platformHeight));  
+        platforms.add(new Platform(5200, groundLevel - 300, platformWidth, platformHeight));  
+        platforms.add(new Platform(5500, groundLevel - 260, platformWidth, platformHeight));  
+        platforms.add(new Platform(5900, groundLevel - 240, platformWidth, platformHeight));  
+        platforms.add(new Platform(6100, groundLevel - 250, platformWidth, platformHeight));  
+        platforms.add(new Platform(6600, groundLevel - 270, platformWidth, platformHeight));  
+        platforms.add(new Platform(6900, groundLevel - 250, platformWidth, platformHeight));  
+        platforms.add(new Platform(7100, groundLevel - 200, platformWidth, platformHeight));  
+        platforms.add(new Platform(7500, groundLevel - 240, platformWidth, platformHeight));  
+        platforms.add(new Platform(8000, groundLevel - 280, platformWidth, platformHeight));  
+        
+        // Crear agujeros en el suelo (espacios vacíos)
+        holes.add(new Rectangle(900, groundLevel, 100, getHeight() - groundLevel));   // Un agujero en x=900
+        holes.add(new Rectangle(2200, groundLevel, 150, getHeight() - groundLevel));  // Otro agujero más adelante
+        holes.add(new Rectangle(4500, groundLevel, 200, getHeight() - groundLevel));  // Otro agujero en x=4500
+        holes.add(new Rectangle(6500, groundLevel, 100, getHeight() - groundLevel));  // Último agujero en x=6500
+        
+        // Ampliar el nivel para que sea más largo
+        levelWidth = 8000;
+
+        // Agregar bandera al final del nivel
+        flag = new Flag(levelWidth - 180, groundLevel - 180);
 
         timer = new Timer(20, this);
         timer.start();
     }
 
+
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         // Dibujar el fondo
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect(0, 0, getWidth(), getHeight());
+
+        // Dibujar el suelo con agujeros
+        g.setColor(Color.DARK_GRAY);
+        for (int i = 0; i < levelWidth; i += 800) {
+            boolean isHole = false;
+            for (Rectangle hole : holes) {
+                if (i >= hole.x && i < hole.x + hole.width) {
+                    isHole = true;
+                    break;
+                }
+            }
+            if (!isHole) {
+                g.fillRect(i, groundLevel, 800, getHeight() - groundLevel);
+            }
+        }
 
         // Dibujar vidas del jugador
         g.setColor(Color.BLACK);
@@ -77,6 +150,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         for (Platform platform : platforms) {
             platform.draw(g);
         }
+
+        // Dibujar agujeros
+        g.setColor(Color.BLACK);
+        for (Rectangle hole : holes) {
+            g.fillRect(hole.x, groundLevel, hole.width, getHeight() - groundLevel);
+        }
+
+        // Dibujar bandera
+        flag.draw(g);
     }
 
     @Override
@@ -100,14 +182,20 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 }
             }
 
-            // Si no hay colisiones, el jugador está cayendo (gravedad)
-            if (!collisionDetected) {
-                player.applyGravity();
+            // Verificar si el jugador ha caído en un agujero
+            if (player.getX() > groundLevel) {
+                playerLives--;
+                if (playerLives <= 0) {
+                    gameOver = true;
+                } else {
+                    player.respawn();
+                }
             }
 
             // Movimiento de la cámara
             cameraX = player.getX() - getWidth() / 2 + player.getWidth() / 2;
             if (cameraX < 0) cameraX = 0;
+            if (cameraX > levelWidth - getWidth()) cameraX = levelWidth - getWidth();
         }
 
         repaint();
@@ -141,7 +229,7 @@ class Player {
     private int x, y;
     private int velX = 0;
     private int velY = 0;
-    private boolean canJump = true;
+    private int jumpsLeft = 2;
     private int width = 30;
     private int height = 50;
     private final int GRAVITY = 1;
@@ -164,14 +252,14 @@ class Player {
         if (y > 350) {
             y = 350;
             velY = 0;
-            canJump = true;
+            jumpsLeft = 2;
         }
     }
 
     public void jump() {
-        if (canJump) {
+        if (jumpsLeft > 0) {
             velY = JUMP_STRENGTH;
-            canJump = false;
+            jumpsLeft--;
         }
     }
 
@@ -203,7 +291,7 @@ class Player {
         if (velY > 0 && playerBounds.getMaxY() > r.getY() && playerBounds.getMaxY() - r.getY() <= velY + 5) {
             y = (int) r.getY() - height;
             velY = 0;
-            canJump = true;
+            jumpsLeft = 2;
         }
         // Colisión desde abajo
         else if (velY < 0 && playerBounds.getY() < r.getMaxY() && r.getMaxY() - playerBounds.getY() <= Math.abs(velY) + 5) {
@@ -222,15 +310,14 @@ class Player {
 
     public void applyGravity() {
         velY += GRAVITY;
-        canJump = true;
     }
-    
 
     public void respawn() {
         x = initialX;
         y = initialY;
         velX = 0;
         velY = 0;
+        jumpsLeft = 2;
     }
 }
 
@@ -265,6 +352,30 @@ class Platform {
     public void draw(Graphics g) {
         g.setColor(Color.GRAY);
         g.fillRect(x, y, width, height);
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height);
+    }
+}
+
+
+
+class Flag {
+    private int x, y;
+    private int width = 20;
+    private int height = 100;
+
+    public Flag(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void draw(Graphics g) {
+        g.setColor(Color.GREEN);
+        g.fillRect(x, y, width, height);
+        g.setColor(Color.WHITE);
+        g.fillRect(x, y, 40, 20);
     }
 
     public Rectangle getBounds() {

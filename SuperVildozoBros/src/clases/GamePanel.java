@@ -9,7 +9,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         JFrame frame = new JFrame("Mario Clone");
         GamePanel gamePanel = new GamePanel();
         frame.add(gamePanel);
-        frame.setSize(800, 600);  // Ajustar el tamaño de la ventana
+        frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
@@ -17,32 +17,31 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Player player;
     private ArrayList<Box> boxes;
     private ArrayList<Platform> platforms;
-    private ArrayList<Enemy> enemies;
     private Timer timer;
-    private int cameraX = 0;  // Posición de la cámara
-    private int playerLives = 3; // Vidas del jugador
+    private int cameraX = 0;
+    private int playerLives = 3;
     private boolean gameOver = false;
 
     public GamePanel() {
         setFocusable(true);
         addKeyListener(this);
-        player = new Player(50, 300);  // Posición inicial del jugador
+        player = new Player(50, 300);
         boxes = new ArrayList<>();
         platforms = new ArrayList<>();
-        enemies = new ArrayList<>();
 
-        // Crear algunas cajas en el suelo
+        // Crear cajas en el suelo
         boxes.add(new Box(100, 350));
         boxes.add(new Box(250, 350));
         boxes.add(new Box(400, 350));
+        boxes.add(new Box(550, 350));
+        boxes.add(new Box(700, 350));
 
-        // Crear plataformas en el aire
-        platforms.add(new Platform(150, 250, 100, 20));
-        platforms.add(new Platform(350, 200, 100, 20));
-
-        // Crear enemigos
-        enemies.add(new Enemy(200, 350, boxes));
-        enemies.add(new Enemy(500, 350, boxes));
+        // Crear plataformas en el aire (ahora más bajas)
+        platforms.add(new Platform(150, 280, 100, 20));
+        platforms.add(new Platform(350, 250, 100, 20));
+        platforms.add(new Platform(550, 220, 100, 20));
+        platforms.add(new Platform(750, 250, 100, 20));
+        platforms.add(new Platform(950, 280, 100, 20));
 
         timer = new Timer(20, this);
         timer.start();
@@ -78,29 +77,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         for (Platform platform : platforms) {
             platform.draw(g);
         }
-
-        // Dibujar enemigos
-        for (Enemy enemy : enemies) {
-            enemy.draw(g);
-        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!gameOver) {
             player.update();
-
-            // Detectar colisión con enemigos
-            for (Enemy enemy : enemies) {
-                enemy.update();
-                if (player.intersects(enemy.getBounds())) {
-                    playerLives--;
-                    player.respawn();  // Reaparecer después de colisionar
-                    if (playerLives == 0) {
-                        gameOver = true;
-                    }
-                }
-            }
 
             // Detectar colisión con cajas y plataformas
             boolean collisionDetected = false;
@@ -121,13 +103,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             // Si no hay colisiones, el jugador está cayendo (gravedad)
             if (!collisionDetected) {
                 player.applyGravity();
-            } else {
-                player.stopFalling();  // Si hay colisión, detener la caída
             }
 
             // Movimiento de la cámara
             cameraX = player.getX() - getWidth() / 2 + player.getWidth() / 2;
-            if (cameraX < 0) cameraX = 0;  // Evitar que la cámara se mueva más allá del inicio
+            if (cameraX < 0) cameraX = 0;
         }
 
         repaint();
@@ -142,7 +122,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             player.setVelX(5);
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            player.jump();  // Permitir saltar en cualquier momento
+            player.jump();
         }
     }
 
@@ -155,24 +135,23 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {}
-
 }
 
 class Player {
     private int x, y;
     private int velX = 0;
     private int velY = 0;
-    private boolean onGround = false;
+    private boolean canJump = true;
     private int width = 30;
     private int height = 50;
-    private final int GRAVITY = 1;  // Velocidad de caída
-    private final int JUMP_STRENGTH = -15;  // Fuerza del salto
-    private int initialX, initialY;  // Para reaparecer al morir
+    private final int GRAVITY = 1;
+    private final int JUMP_STRENGTH = -15;
+    private int initialX, initialY;
 
     public Player(int x, int y) {
         this.x = x;
         this.y = y;
-        this.initialX = x;  // Guardar posición inicial para reaparecer
+        this.initialX = x;
         this.initialY = y;
     }
 
@@ -180,28 +159,20 @@ class Player {
         x += velX;
         y += velY;
 
-        // Aplicar gravedad si el jugador no está en el suelo
-        if (!onGround) {
-            velY += GRAVITY;  // Aumentar la velocidad de caída
-        }
+        velY += GRAVITY;
 
-        // Limitar la posición del jugador para no caer más allá del piso (350)
         if (y > 350) {
-            y = 350; // Asegúrate de que el jugador no atraviese el suelo
+            y = 350;
             velY = 0;
-            onGround = true; // Ahora está en el suelo
+            canJump = true;
         }
     }
 
     public void jump() {
-        if (onGround) { // Solo saltar si está en el suelo
-            velY = JUMP_STRENGTH; // Aplicar fuerza de salto
-            onGround = false; // El jugador ya no está en el suelo
+        if (canJump) {
+            velY = JUMP_STRENGTH;
+            canJump = false;
         }
-    }
-
-    public boolean isOnGround() {
-        return onGround;
     }
 
     public void setVelX(int velX) {
@@ -232,7 +203,7 @@ class Player {
         if (velY > 0 && playerBounds.getMaxY() > r.getY() && playerBounds.getMaxY() - r.getY() <= velY + 5) {
             y = (int) r.getY() - height;
             velY = 0;
-            onGround = true; // Ahora está en el suelo
+            canJump = true;
         }
         // Colisión desde abajo
         else if (velY < 0 && playerBounds.getY() < r.getMaxY() && r.getMaxY() - playerBounds.getY() <= Math.abs(velY) + 5) {
@@ -242,27 +213,20 @@ class Player {
         // Colisión desde la izquierda
         else if (velX > 0 && playerBounds.getMaxX() > r.getX() && playerBounds.getMaxX() - r.getX() <= velX + 5) {
             x = (int) r.getX() - width;
-            velX = 0;
         }
         // Colisión desde la derecha
         else if (velX < 0 && playerBounds.getX() < r.getMaxX() && r.getMaxX() - playerBounds.getX() <= Math.abs(velX) + 5) {
             x = (int) r.getMaxX();
-            velX = 0;
         }
     }
 
     public void applyGravity() {
-        if (!onGround) {
-            velY += GRAVITY;  // Simular la gravedad
-        }
+        velY += GRAVITY;
+        canJump = true;
     }
-
-    public void stopFalling() {
-        velY = 0;  // Detener la caída
-    }
+    
 
     public void respawn() {
-        // Reaparecer en la posición inicial después de perder una vida
         x = initialX;
         y = initialY;
         velX = 0;
@@ -276,10 +240,6 @@ class Box {
     public Box(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public void draw(Graphics g) {
@@ -309,41 +269,5 @@ class Platform {
 
     public Rectangle getBounds() {
         return new Rectangle(x, y, width, height);
-    }
-}
-
-class Enemy {
-    private int x, y;
-    private int velX = 2;
-    private ArrayList<Box> boxes;
-
-    public Enemy(int x, int y, ArrayList<Box> boxes) {
-        this.x = x;
-        this.y = y;
-        this.boxes = boxes;
-    }
-
-    public void update() {
-        x += velX;
-
-        // Cambiar de dirección al chocar con los bordes o cajas
-        if (x < 0 || x > 550) {
-            velX = -velX;
-        }
-
-        for (Box box : boxes) {
-            if (new Rectangle(x, y, 30, 50).intersects(box.getBounds())) {
-                velX = -velX;
-            }
-        }
-    }
-
-    public void draw(Graphics g) {
-        g.setColor(Color.GREEN);
-        g.fillRect(x, y, 30, 50);
-    }
-
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, 30, 50);
     }
 }

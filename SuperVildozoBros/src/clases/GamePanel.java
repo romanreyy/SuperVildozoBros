@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
     public static void main(String[] args) {
@@ -18,7 +17,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Player player;
     private ArrayList<Box> boxes;
     private ArrayList<Platform> platforms;
-    private ArrayList<holes> holes;
+    private ArrayList<Rectangle> holes; // Cambiar a ArrayList<Rectangle>
     private Timer timer;
     private int cameraX = 0;
     private int playerLives = 3;
@@ -32,18 +31,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private int platformHeight = 20; // Alto de las plataformas
 
     public GamePanel() {
-    	setFocusable(true);
+        setFocusable(true);
         addKeyListener(this);
         player = new Player(50, groundLevel - 50);
         boxes = new ArrayList<>();
         platforms = new ArrayList<>();
-        holes = new ArrayList<>();
+        holes = new ArrayList<>(); // Inicializar como ArrayList<Rectangle>
 
         // Definir muchas cajas en posiciones fijas a lo largo del nivel
         boxes.add(new Box(200, groundLevel - 150));  
         boxes.add(new Box(400, groundLevel - 150));  
         boxes.add(new Box(700, groundLevel - 150));  
-        boxes.add(new Box(1000, groundLevel - 150));  
         boxes.add(new Box(1200, groundLevel - 150));  
         boxes.add(new Box(1500, groundLevel - 150));  
         boxes.add(new Box(2000, groundLevel - 150));  
@@ -86,12 +84,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         platforms.add(new Platform(7100, groundLevel - 200, platformWidth, platformHeight));  
         platforms.add(new Platform(7500, groundLevel - 240, platformWidth, platformHeight));  
         platforms.add(new Platform(8000, groundLevel - 280, platformWidth, platformHeight));  
-        
-        // Crear agujeros en el suelo (espacios vacíos)
-        holes.add(new Rectangle(900, groundLevel, 100, getHeight() - groundLevel));   // Un agujero en x=900
-        holes.add(new Rectangle(2200, groundLevel, 150, getHeight() - groundLevel));  // Otro agujero más adelante
-        holes.add(new Rectangle(4500, groundLevel, 200, getHeight() - groundLevel));  // Otro agujero en x=4500
-        holes.add(new Rectangle(6500, groundLevel, 100, getHeight() - groundLevel));  // Último agujero en x=6500
+
+        // Crear agujeros en el suelo (espacios vacíos), más altos y en posiciones más arriba
+        holes.add(new Rectangle(900, groundLevel - 200, 100, 200));   // Un agujero en x=900
+        holes.add(new Rectangle(2200, groundLevel - 200, 150, 200));  // Otro agujero más adelante
+        holes.add(new Rectangle(4500, groundLevel - 200, 200, 200));  // Otro agujero en x=4500
+        holes.add(new Rectangle(6500, groundLevel - 200, 100, 200));  // Último agujero en x=6500
         
         // Ampliar el nivel para que sea más largo
         levelWidth = 8000;
@@ -102,7 +100,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         timer = new Timer(20, this);
         timer.start();
     }
-
 
     @Override
     public void paintComponent(Graphics g) {
@@ -154,7 +151,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         // Dibujar agujeros
         g.setColor(Color.BLACK);
         for (Rectangle hole : holes) {
-            g.fillRect(hole.x, groundLevel, hole.width, getHeight() - groundLevel);
+            g.fillRect(900, 400, 200, 300);
         }
 
         // Dibujar bandera
@@ -183,7 +180,20 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             }
 
             // Verificar si el jugador ha caído en un agujero
-            if (player.getX() > groundLevel) {
+            boolean inHole = false;
+            for (Rectangle hole : holes) {
+                if (player.intersects(hole) && player.getVelY() > 0) {
+                    if (player.getY() + player.getHeight() > hole.getY() &&
+                        player.getY() < hole.getY() + hole.getHeight()) {
+                        inHole = true;
+                        break;
+                    }
+                }
+            }
+
+            if (inHole) {
+                // Iniciar animación de caída
+                player.startFallingAnimation();
                 playerLives--;
                 if (playerLives <= 0) {
                     gameOver = true;
@@ -200,6 +210,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
         repaint();
     }
+
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -235,6 +246,7 @@ class Player {
     private final int GRAVITY = 1;
     private final int JUMP_STRENGTH = -15;
     private int initialX, initialY;
+    private boolean falling = false; // Añadido para la animación de caída
 
     public Player(int x, int y) {
         this.x = x;
@@ -267,8 +279,20 @@ class Player {
         this.velX = velX;
     }
 
+    public void startFallingAnimation() {
+        falling = true;
+    }
+
+    public void stopFallingAnimation() {
+        falling = false;
+    }
+
     public void draw(Graphics g) {
-        g.setColor(Color.BLUE);
+        if (falling) {
+            g.setColor(Color.RED); // Cambiar color para la animación de caída
+        } else {
+            g.setColor(Color.BLUE);
+        }
         g.fillRect(x, y, width, height);
     }
 
@@ -276,8 +300,20 @@ class Player {
         return x;
     }
 
+    public int getY() {
+        return y;
+    }
+
     public int getWidth() {
         return width;
+    }
+
+    public int getHeight() {
+        return height; // Método agregado para obtener la altura del jugador
+    }
+
+    public int getVelY() {
+        return velY;
     }
 
     public boolean intersects(Rectangle r) {
@@ -292,6 +328,7 @@ class Player {
             y = (int) r.getY() - height;
             velY = 0;
             jumpsLeft = 2;
+            stopFallingAnimation();
         }
         // Colisión desde abajo
         else if (velY < 0 && playerBounds.getY() < r.getMaxY() && r.getMaxY() - playerBounds.getY() <= Math.abs(velY) + 5) {
@@ -318,8 +355,11 @@ class Player {
         velX = 0;
         velY = 0;
         jumpsLeft = 2;
+        stopFallingAnimation(); // Detener animación de caída al respawn
     }
 }
+
+
 
 class Box {
     private int x, y;

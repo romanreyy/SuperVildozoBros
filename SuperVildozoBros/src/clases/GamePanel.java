@@ -29,7 +29,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private int levelWidth = 2500;
     private int groundLevel = 400;
     private int platformHeight = 20;
-    private int currentLevel = 3;
+    private int currentLevel = 1;
 
     public GamePanel() {
         setFocusable(true);
@@ -39,13 +39,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         platforms = new ArrayList<>();
         holes = new ArrayList<>();
         boxes = new ArrayList<>();
-        createBoxes(currentLevel);
-
-        // Crear plataformas con una mejor distribución
-        createPlatforms(currentLevel);
-        
-        // Crear enemigos en posiciones específicas
-        createEnemies(currentLevel);
 
         // Crear agujeros
         holes.add(new Rectangle(900, groundLevel - 200, 100, 200));
@@ -72,16 +65,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private void createPlatforms(int currentLevel) {
         platforms.clear(); // Limpiar plataformas antes de añadir nuevas
 
-        switch (currentLevel) {
-            case 1:
+        if(currentLevel == 1) {
                 platforms.add(new Platform(200, groundLevel - 100, 150, platformHeight));
                 platforms.add(new Platform(400, groundLevel - 150, 150, platformHeight));
                 platforms.add(new Platform(600, groundLevel - 200, 150, platformHeight));
                 platforms.add(new Platform(800, groundLevel - 250, 150, platformHeight));
                 platforms.add(new Platform(1000, groundLevel - 150, 150, platformHeight));
                 platforms.add(new Platform(1200, groundLevel - 100, 150, platformHeight));
-                break;
-            case 2:
+                enemies.add(new Enemy(200, groundLevel - 150));
+                enemies.add(new Enemy(500, groundLevel - 200));
+                enemies.add(new Enemy(850, groundLevel - 300));
+                enemies.add(new Enemy(1050, groundLevel - 300));
+        }
+        else if(currentLevel == 2) {
             	platforms.add(new Platform(150, groundLevel - 100, 200, platformHeight)); 
                 platforms.add(new Platform(400, groundLevel - 150, 150, platformHeight)); // Distancia más corta
                 platforms.add(new Platform(650, groundLevel - 180, 150, platformHeight)); 
@@ -92,44 +88,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 platforms.add(new Platform(1950, groundLevel - 150, 150, platformHeight));
                 platforms.add(new Platform(2150, groundLevel - 200, 150, platformHeight));	
                 platforms.add(new Platform(2350, groundLevel - 100, 150, platformHeight));
-                break;
-            case 3:
-                platforms.add(new Platform(100, groundLevel - 120, 150, platformHeight));
-                platforms.add(new Platform(300, groundLevel - 150, 150, platformHeight));
-                platforms.add(new Platform(1100, groundLevel - 120, 150, platformHeight));
-                platforms.add(new Platform(1300, groundLevel - 160, 150, platformHeight));
-                platforms.add(new Platform(1500, groundLevel - 180, 150, platformHeight));
-                platforms.add(new Platform(1750, groundLevel - 100, 150, platformHeight));
-                break;
-
-            case 4:
-                platforms.add(new Platform(300, groundLevel - 150, 150, platformHeight));
-                platforms.add(new Platform(500, groundLevel - 200, 150, platformHeight));
-                platforms.add(new Platform(700, groundLevel - 250, 150, platformHeight));
-                platforms.add(new Platform(900, groundLevel - 300, 150, platformHeight));
-                break;
-            case 5:
-                platforms.add(new Platform(100, groundLevel - 100, 150, platformHeight));
-                platforms.add(new Platform(300, groundLevel - 150, 150, platformHeight));
-                platforms.add(new Platform(500, groundLevel - 200, 150, platformHeight));
-                platforms.add(new Platform(700, groundLevel - 250, 150, platformHeight));
-                platforms.add(new Platform(900, groundLevel - 300, 150, platformHeight));
-                break;
-        }
-    }
-
-    private void createEnemies(int currentLevel) {
-        enemies.clear(); 
-
-        switch (currentLevel) {
-            case 1:
-                enemies.add(new Enemy(200, groundLevel - 150));
-                enemies.add(new Enemy(500, groundLevel - 200));
-                enemies.add(new Enemy(850, groundLevel - 300));
-                enemies.add(new Enemy(1050, groundLevel - 300));
-                break;
-            case 2:
-            	enemies.add(new Enemy(180, groundLevel - 150));  // Enemigo en la primera plataforma
+                enemies.add(new Enemy(180, groundLevel - 150));  // Enemigo en la primera plataforma
                 enemies.add(new Enemy(600, groundLevel - 200));  // Enemigo en plataforma alta
                 enemies.add(new Enemy(400, groundLevel - 50));  
                 enemies.add(new Enemy(1100, groundLevel - 50)); 
@@ -140,8 +99,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 enemies.add(new Enemy(1990, groundLevel - 200));
                 enemies.add(new Enemy(2300, groundLevel - 50));
                 enemies.add(new Enemy(2300, groundLevel - 50));
-                break;
-            case 3:
+        }
+        else if(currentLevel == 3) {
+                platforms.add(new Platform(100, groundLevel - 120, 150, platformHeight));
+                platforms.add(new Platform(300, groundLevel - 150, 150, platformHeight));
+                platforms.add(new Platform(1100, groundLevel - 120, 150, platformHeight));
+                platforms.add(new Platform(1300, groundLevel - 160, 150, platformHeight));
+                platforms.add(new Platform(1500, groundLevel - 180, 150, platformHeight));
+                platforms.add(new Platform(1750, groundLevel - 100, 150, platformHeight));
                 enemies.add(new Enemy(200, groundLevel - 50));  // Enemigos en el suelo
                 enemies.add(new Enemy(400, groundLevel - 50));
                 enemies.add(new Enemy(700, groundLevel - 50));
@@ -150,22 +115,28 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 enemies.add(new Enemy(2000, groundLevel - 50));
                 enemies.add(new Enemy(2300, groundLevel - 50));
                 enemies.add(new Enemy(2400, groundLevel - 50));
-                break;
-
-            case 4:
+        }
+        else if(currentLevel == 4) {
+                platforms.add(new Platform(300, groundLevel - 150, 150, platformHeight));
+                platforms.add(new Platform(500, groundLevel - 200, 150, platformHeight));
+                platforms.add(new Platform(700, groundLevel - 250, 150, platformHeight));
+                platforms.add(new Platform(900, groundLevel - 300, 150, platformHeight));
                 enemies.add(new Enemy(150, groundLevel - 170));
                 enemies.add(new Enemy(450, groundLevel - 180));
                 enemies.add(new Enemy(750, groundLevel - 200));
-                break;
-            case 5:
+        }
+        else if(currentLevel == 5) {
+                platforms.add(new Platform(100, groundLevel - 100, 150, platformHeight));
+                platforms.add(new Platform(300, groundLevel - 150, 150, platformHeight));
+                platforms.add(new Platform(500, groundLevel - 200, 150, platformHeight));
+                platforms.add(new Platform(700, groundLevel - 250, 150, platformHeight));
+                platforms.add(new Platform(900, groundLevel - 300, 150, platformHeight));
                 enemies.add(new Enemy(100, groundLevel - 150));
                 enemies.add(new Enemy(300, groundLevel - 160));
                 enemies.add(new Enemy(500, groundLevel - 180));
                 enemies.add(new Enemy(700, groundLevel - 150));
-                break;
         }
     }
-
 
     @Override
     public void paintComponent(Graphics g) {
@@ -281,7 +252,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     
  // Método para reiniciar la posición de los enemigos
     private void resetEnemies() {
-        createEnemies(currentLevel);  // Reiniciar los enemigos a su posición original
+        createPlatforms(currentLevel);  // Reiniciar los enemigos a su posición original
     }
 
     private void resetLevel() {
@@ -318,7 +289,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         gameOver = false; 
         player.respawn(); 
         createPlatforms(currentLevel); 
-        createEnemies(currentLevel); 
+        createPlatforms(currentLevel); 
         holes.clear(); 
         holes.add(new Rectangle(900, groundLevel - 200, 100, 200)); 
         flag = new Flag(levelWidth - 800, groundLevel - 180);
@@ -432,6 +403,7 @@ class Player {
             x = (int) r.getMaxX();
         }
     }
+
 
     public void respawn() {
         x = initialX;

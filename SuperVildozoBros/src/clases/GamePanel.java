@@ -29,7 +29,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private int levelWidth = 2500;
     private int groundLevel = 400;
     private int platformHeight = 20;
-    private int currentLevel = 1;
+    private int currentLevel = 3;
 
     public GamePanel() {
         setFocusable(true);
@@ -80,12 +80,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 break;
                 
             case 3:
-                platforms.add(new Platform(100, groundLevel - 120, 150, platformHeight));
-                platforms.add(new Platform(300, groundLevel - 150, 150, platformHeight));
-                platforms.add(new Platform(1100, groundLevel - 120, 150, platformHeight));
+                platforms.add(new Platform(200, groundLevel - 100, 150, platformHeight));
+                platforms.add(new Platform(550, groundLevel - 150, 150, platformHeight));
+                platforms.add(new Platform(800, groundLevel - 100, 150, platformHeight));
+                platforms.add(new Platform(300, groundLevel - 260, 150, platformHeight));
+                platforms.add(new Platform(550, groundLevel - 300, 150, platformHeight));
+                platforms.add(new Platform(850, groundLevel - 240, 150, platformHeight));
                 platforms.add(new Platform(1300, groundLevel - 160, 150, platformHeight));
-                platforms.add(new Platform(1500, groundLevel - 180, 150, platformHeight));
                 platforms.add(new Platform(1750, groundLevel - 100, 150, platformHeight));
+                platforms.add(new Platform(1400, groundLevel - 250, 150, platformHeight));
+                platforms.add(new Platform(1600, groundLevel - 250, 150, platformHeight));
+
                 break;
         }
     }
@@ -94,7 +99,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         boxes.clear();
         if (currentLevel == 3) {
             // Asegúrate de que la posición Y sea correcta y visible
-            boxes.add(new Box(150, groundLevel - 50, 50, 50)); // Ajusté la posición Y
             boxes.add(new Box(300, groundLevel - 50, 50, 50)); // Ajusté la posición Y
             boxes.add(new Box(600, groundLevel - 50, 50, 50)); // Ajusté la posición Y
             boxes.add(new Box(900, groundLevel - 50, 50, 50)); // Ajusté la posición Y
@@ -125,9 +129,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             	break;
             case 2:
             	enemies.add(new Enemy(200, groundLevel - 135, true));  // En la primera plataforma
-                enemies.add(new Enemy(450, groundLevel - 185, true));  // En la segunda plataforma
+                enemies.add(new Enemy(500, groundLevel - 185, true));  // En la segunda plataforma
                 enemies.add(new Enemy(700, groundLevel - 215, true));  // En la tercera plataforma
-                enemies.add(new Enemy(900, groundLevel - 285, true));  // En la cuarta plataforma
+                enemies.add(new Enemy(900, groundLevel - 285, true));
+                enemies.add(new Enemy(900, groundLevel - 130, false));
+            	enemies.add(new Enemy(900, groundLevel - 70, false));
+            	enemies.add(new Enemy(900, groundLevel - 30, false));  // En la cuarta plataforma
                 enemies.add(new Enemy(1200, groundLevel - 235, true)); // En la quinta plataforma
                 enemies.add(new Enemy(1500, groundLevel - 285, true)); // En la sexta plataforma
                 enemies.add(new Enemy(1800, groundLevel - 135, true)); // En la séptima plataforma
@@ -137,14 +144,22 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 break;
                 
             case 3:
-                enemies.add(new Enemy(200, groundLevel - 50, true));
-                enemies.add(new Enemy(400, groundLevel - 50, true));
-                enemies.add(new Enemy(700, groundLevel - 50, true));
-                enemies.add(new Enemy(1300, groundLevel - 50, true));
-                enemies.add(new Enemy(1600, groundLevel - 50, true));
-                enemies.add(new Enemy(2000, groundLevel - 50, true));
-                enemies.add(new Enemy(2300, groundLevel - 50, true));
-                enemies.add(new Enemy(2400, groundLevel - 50, true));
+            	enemies.add(new Enemy(210, groundLevel - 135, true));  // En la primera plataforma
+                enemies.add(new Enemy(550, groundLevel - 185, true));  // En la segunda plataforma
+                enemies.add(new Enemy(900, groundLevel - 285, true));
+                enemies.add(new Enemy(400, groundLevel - 30, true));
+                enemies.add(new Enemy(700, groundLevel - 30, true));
+                enemies.add(new Enemy(600, groundLevel - 330, true));
+                enemies.add(new Enemy(900, groundLevel - 130, false));
+            	enemies.add(new Enemy(900, groundLevel - 70, false));
+            	enemies.add(new Enemy(900, groundLevel - 30, false));
+            	enemies.add(new Enemy(1100, groundLevel - 30, true));
+                enemies.add(new Enemy(1300, groundLevel - 30, true));
+                enemies.add(new Enemy(1600, groundLevel - 30, true));
+                enemies.add(new Enemy(1700, groundLevel - 130, true));
+                enemies.add(new Enemy(2000, groundLevel - 30, true));
+                enemies.add(new Enemy(2300, groundLevel - 30, true));
+                enemies.add(new Enemy(2400, groundLevel - 30, true));
                 break;
         }
     }
@@ -327,15 +342,16 @@ class Player {
 
         velY += GRAVITY;
 
+        // Limitar el jugador al suelo
         if (y > 350) {
             y = 350;
             velY = 0;
-            jumpsLeft = 0; // Reset jumps when the player touches the ground
+            jumpsLeft = 0; // Reiniciar saltos cuando el jugador toca el suelo
         }
     }
 
     public void jump() {
-        if (jumpsLeft == 0) { // Allow only one jump
+        if (jumpsLeft == 0) { // Permitir solo un salto
             velY = JUMP_STRENGTH;
             jumpsLeft++;
         }
@@ -374,30 +390,51 @@ class Player {
         return new Rectangle(x, y, width, height).intersects(r);
     }
 
+    // Método para manejar colisiones con plataformas y cajas
     public void handleCollision(Rectangle bounds, String type) {
-        
+        // Colisiones con plataformas
         if (type.equals("platform")) {
-           
             if (y + height - velY <= bounds.y) {
+                // Colisión por arriba de la plataforma
                 y = bounds.y - height;
                 velY = 0;
                 jumpsLeft = 0;
-            }
-           
-            else if (y + height > bounds.y && y < bounds.y + bounds.height && velY < 0) {
-               
+            } else if (y + height > bounds.y && y < bounds.y + bounds.height && velY < 0) {
+                // Colisión por debajo de la plataforma
                 y = bounds.y + bounds.height;
                 velY = 0;
             }
         }
+
+        // Colisiones con cajas
+        if (type.equals("box")) {
+            // Colisión por arriba de la caja
+            if (y + height - velY <= bounds.y) {
+                y = bounds.y - height;
+                velY = 0;
+                jumpsLeft = 0;
+            } 
+            // Colisión por la izquierda o derecha de la caja
+            else if (x + width > bounds.x && x < bounds.x + bounds.width) {
+                // Colisión por la izquierda
+                if (x + width - velX <= bounds.x) {
+                    x = bounds.x - width;
+                }
+                // Colisión por la derecha
+                else if (x - velX >= bounds.x + bounds.width) {
+                    x = bounds.x + bounds.width;
+                }
+            }
+        }
     }
 
-
+    // Método para reubicar al jugador en su posición inicial
     public void respawn() {
         x = initialX;
         y = initialY;
     }
 }
+
 
 class Enemy {
     private int x, y;

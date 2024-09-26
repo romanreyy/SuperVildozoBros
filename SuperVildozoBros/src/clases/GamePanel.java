@@ -40,101 +40,112 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         holes = new ArrayList<>();
         boxes = new ArrayList<>();
 
-        // Crear agujeros
+        // Create holes
         holes.add(new Rectangle(900, groundLevel - 200, 100, 200));
 
-        flag = new Flag(levelWidth - 100, groundLevel - 180); // Mover la bandera al final del nivel
+        flag = new Flag(levelWidth - 100, groundLevel - 180); // Move flag to the end of the level
 
         timer = new Timer(20, this);
         timer.start();
-    }
-    
-    private void createBoxes(int currentLevel) {
-        boxes.clear(); // Limpiar cajas antes de añadir nuevas
-        if (currentLevel == 3) {
-            boxes.add(new Box(150, groundLevel - 50, 50, 50)); // Cajas en diferentes posiciones del suelo
-            boxes.add(new Box(300, groundLevel - 50, 50, 50));
-            boxes.add(new Box(600, groundLevel - 50, 50, 50));
-            boxes.add(new Box(900, groundLevel - 50, 50, 50));
-            boxes.add(new Box(1200, groundLevel - 50, 50, 50));
-            boxes.add(new Box(1500, groundLevel - 50, 50, 50));
-            boxes.add(new Box(1900, groundLevel - 50, 50, 50));
-        }
+        resetLevel(); // Initialize the first level
     }
 
     private void createPlatforms(int currentLevel) {
-        platforms.clear(); // Limpiar plataformas antes de añadir nuevas
-
-        if(currentLevel == 1) {
+        platforms.clear();
+        switch (currentLevel) {
+        	case 1:
+        		levelWidth = 2000;
+        		flag = new Flag(levelWidth - 100, groundLevel - 180);
                 platforms.add(new Platform(200, groundLevel - 100, 150, platformHeight));
                 platforms.add(new Platform(400, groundLevel - 150, 150, platformHeight));
                 platforms.add(new Platform(600, groundLevel - 200, 150, platformHeight));
                 platforms.add(new Platform(800, groundLevel - 250, 150, platformHeight));
                 platforms.add(new Platform(1000, groundLevel - 150, 150, platformHeight));
                 platforms.add(new Platform(1200, groundLevel - 100, 150, platformHeight));
-                enemies.add(new Enemy(200, groundLevel - 150));
-                enemies.add(new Enemy(500, groundLevel - 200));
-                enemies.add(new Enemy(850, groundLevel - 300));
-                enemies.add(new Enemy(1050, groundLevel - 300));
-        }
-        else if(currentLevel == 2) {
-            	platforms.add(new Platform(150, groundLevel - 100, 200, platformHeight)); 
-                platforms.add(new Platform(400, groundLevel - 150, 150, platformHeight)); // Distancia más corta
-                platforms.add(new Platform(650, groundLevel - 180, 150, platformHeight)); 
+                platforms.add(new Platform(1450, groundLevel - 160, 150, platformHeight));
+                platforms.add(new Platform(1650, groundLevel - 150, 220, platformHeight));
+                break;
+                
+            case 2:
+                platforms.add(new Platform(150, groundLevel - 100, 200, platformHeight));
+                platforms.add(new Platform(400, groundLevel - 150, 150, platformHeight));
+                platforms.add(new Platform(650, groundLevel - 180, 150, platformHeight));
                 platforms.add(new Platform(850, groundLevel - 250, 150, platformHeight));
-                platforms.add(new Platform(1150, groundLevel - 200, 200, platformHeight)); 
+                platforms.add(new Platform(1150, groundLevel - 200, 200, platformHeight));
                 platforms.add(new Platform(1450, groundLevel - 250, 180, platformHeight));
                 platforms.add(new Platform(1750, groundLevel - 100, 150, platformHeight));
                 platforms.add(new Platform(1950, groundLevel - 150, 150, platformHeight));
-                platforms.add(new Platform(2150, groundLevel - 200, 150, platformHeight));	
+                platforms.add(new Platform(2150, groundLevel - 200, 150, platformHeight));
                 platforms.add(new Platform(2350, groundLevel - 100, 150, platformHeight));
-                enemies.add(new Enemy(180, groundLevel - 150));  // Enemigo en la primera plataforma
-                enemies.add(new Enemy(600, groundLevel - 200));  // Enemigo en plataforma alta
-                enemies.add(new Enemy(400, groundLevel - 50));  
-                enemies.add(new Enemy(1100, groundLevel - 50)); 
-                enemies.add(new Enemy(1300, groundLevel - 50));// Enemigo en el suelo
-                enemies.add(new Enemy(1200, groundLevel - 220)); // Enemigo en una plataforma elevada
-                enemies.add(new Enemy(1700, groundLevel - 100)); // Enemigo al final del nivel
-                enemies.add(new Enemy(2000, groundLevel - 50)); // Enemigo en una plataforma elevada
-                enemies.add(new Enemy(1990, groundLevel - 200));
-                enemies.add(new Enemy(2300, groundLevel - 50));
-                enemies.add(new Enemy(2300, groundLevel - 50));
-        }
-        else if(currentLevel == 3) {
+                break;
+                
+            case 3:
                 platforms.add(new Platform(100, groundLevel - 120, 150, platformHeight));
                 platforms.add(new Platform(300, groundLevel - 150, 150, platformHeight));
                 platforms.add(new Platform(1100, groundLevel - 120, 150, platformHeight));
                 platforms.add(new Platform(1300, groundLevel - 160, 150, platformHeight));
                 platforms.add(new Platform(1500, groundLevel - 180, 150, platformHeight));
                 platforms.add(new Platform(1750, groundLevel - 100, 150, platformHeight));
-                enemies.add(new Enemy(200, groundLevel - 50));  // Enemigos en el suelo
-                enemies.add(new Enemy(400, groundLevel - 50));
-                enemies.add(new Enemy(700, groundLevel - 50));
-                enemies.add(new Enemy(1300, groundLevel - 50));
-                enemies.add(new Enemy(1600, groundLevel - 50));
-                enemies.add(new Enemy(2000, groundLevel - 50));
-                enemies.add(new Enemy(2300, groundLevel - 50));
-                enemies.add(new Enemy(2400, groundLevel - 50));
+                break;
         }
-        else if(currentLevel == 4) {
-                platforms.add(new Platform(300, groundLevel - 150, 150, platformHeight));
-                platforms.add(new Platform(500, groundLevel - 200, 150, platformHeight));
-                platforms.add(new Platform(700, groundLevel - 250, 150, platformHeight));
-                platforms.add(new Platform(900, groundLevel - 300, 150, platformHeight));
-                enemies.add(new Enemy(150, groundLevel - 170));
-                enemies.add(new Enemy(450, groundLevel - 180));
-                enemies.add(new Enemy(750, groundLevel - 200));
+    }
+    
+    private void createBoxes(int currentLevel) {
+        boxes.clear();
+        if (currentLevel == 3) {
+            // Asegúrate de que la posición Y sea correcta y visible
+            boxes.add(new Box(150, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(300, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(600, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(900, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(1200, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(1500, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(1900, groundLevel - 50, 50, 50)); // Ajusté la posición Y
         }
-        else if(currentLevel == 5) {
-                platforms.add(new Platform(100, groundLevel - 100, 150, platformHeight));
-                platforms.add(new Platform(300, groundLevel - 150, 150, platformHeight));
-                platforms.add(new Platform(500, groundLevel - 200, 150, platformHeight));
-                platforms.add(new Platform(700, groundLevel - 250, 150, platformHeight));
-                platforms.add(new Platform(900, groundLevel - 300, 150, platformHeight));
-                enemies.add(new Enemy(100, groundLevel - 150));
-                enemies.add(new Enemy(300, groundLevel - 160));
-                enemies.add(new Enemy(500, groundLevel - 180));
-                enemies.add(new Enemy(700, groundLevel - 150));
+    }
+
+    private void createEnemies(int currentLevel) {
+        enemies.clear();
+        switch(currentLevel) {
+        	case 1:
+        		enemies.add(new Enemy(250, groundLevel - 130, false));
+        		enemies.add(new Enemy(490, groundLevel - 180, false));
+        		enemies.add(new Enemy(860, groundLevel - 280, false));
+        		enemies.add(new Enemy(1010, groundLevel - 200, false));
+        		enemies.add(new Enemy(1110, groundLevel - 200, false));
+        		enemies.add(new Enemy(900, groundLevel - 130, false));
+            	enemies.add(new Enemy(900, groundLevel - 70, false));
+            	enemies.add(new Enemy(900, groundLevel - 30, false));
+            	enemies.add(new Enemy(1200, groundLevel - 70, false));
+            	enemies.add(new Enemy(1200, groundLevel - 30, false));
+            	enemies.add(new Enemy(1450, groundLevel - 110, false));
+            	enemies.add(new Enemy(1450, groundLevel - 70, false));
+            	enemies.add(new Enemy(1450, groundLevel - 30, false));
+            	enemies.add(new Enemy(1550, groundLevel - 190, false));
+            	break;
+            case 2:
+            	enemies.add(new Enemy(200, groundLevel - 135, true));  // En la primera plataforma
+                enemies.add(new Enemy(450, groundLevel - 185, true));  // En la segunda plataforma
+                enemies.add(new Enemy(700, groundLevel - 215, true));  // En la tercera plataforma
+                enemies.add(new Enemy(900, groundLevel - 285, true));  // En la cuarta plataforma
+                enemies.add(new Enemy(1200, groundLevel - 235, true)); // En la quinta plataforma
+                enemies.add(new Enemy(1500, groundLevel - 285, true)); // En la sexta plataforma
+                enemies.add(new Enemy(1800, groundLevel - 135, true)); // En la séptima plataforma
+                enemies.add(new Enemy(2000, groundLevel - 185, true)); // En la octava plataforma
+                enemies.add(new Enemy(2200, groundLevel - 235, true)); // En la novena plataforma
+                enemies.add(new Enemy(2400, groundLevel - 135, true)); 
+                break;
+                
+            case 3:
+                enemies.add(new Enemy(200, groundLevel - 50, true));
+                enemies.add(new Enemy(400, groundLevel - 50, true));
+                enemies.add(new Enemy(700, groundLevel - 50, true));
+                enemies.add(new Enemy(1300, groundLevel - 50, true));
+                enemies.add(new Enemy(1600, groundLevel - 50, true));
+                enemies.add(new Enemy(2000, groundLevel - 50, true));
+                enemies.add(new Enemy(2300, groundLevel - 50, true));
+                enemies.add(new Enemy(2400, groundLevel - 50, true));
+                break;
         }
     }
 
@@ -160,7 +171,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
 
         g.setColor(Color.BLACK);
-        g.drawString("Vidas: " + playerLives, 20, 20);
+        g.drawString("Lives: " + playerLives, 20, 20);
 
         if (gameOver) {
             g.drawString("Game Over", getWidth() / 2 - 40, getHeight() / 2);
@@ -179,6 +190,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             box.draw(g);
         }
 
+
         for (Rectangle hole : holes) {
             g.setColor(Color.BLACK);
             g.fillRect(hole.x, hole.y, hole.width, hole.height);
@@ -191,55 +203,51 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         if (!gameOver) {
             player.update();
 
-            boolean collisionDetected = false;
+            boolean playerHit = false;
 
-            // Actualizar enemigos y verificar colisiones con cajas
             for (Enemy enemy : enemies) {
-                enemy.update(platforms, boxes); // Actualizar con cajas también
-
+                enemy.update(platforms, boxes, levelWidth);
                 if (player.intersects(enemy.getBounds())) {
-                    playerLives--;
-                    player.respawn();
-                    resetEnemies(); // Reiniciar la posición de los enemigos
-                    if (playerLives <= 0) {
-                        gameOver = true;
-                    }
-                    collisionDetected = true;
+                    playerHit = true;
                     break;
                 }
             }
-            
-            for (Box box : boxes) {
-                if (player.intersects(box.getBounds())) {
-                    player.handleCollision(box.getBounds(), "box");
-                    collisionDetected = true;
+
+            if (playerHit) {
+                playerLives--;
+                player.respawn();
+                if (playerLives <= 0) {
+                    gameOver = true;
                 }
             }
 
-            
             for (Platform platform : platforms) {
                 if (player.intersects(platform.getBounds())) {
                     player.handleCollision(platform.getBounds(), "platform");
-                    collisionDetected = true;
                 }
             }
 
             boolean inHole = false;
             for (Rectangle hole : holes) {
                 if (player.intersects(hole) && player.getVelY() > 0) {
-                    // Permitir pasar el agujero negro
-                    inHole = false; // No resta vidas por caer en el agujero
+                    inHole = false; // No lose lives for falling into the hole
                 }
             }
 
+
             if (player.intersects(flag.getBounds())) {
-            	 System.out.println("avanzo");
                 currentLevel++;
                 if (currentLevel > 5) {
-                    System.out.println("Has completado todos los niveles!");
-                    gameOver = true;
+                    gameOver = true; // Completed all levels
                 } else {
                     resetLevel();
+                }
+            }
+
+            // Añadir colisión con cajas
+            for (Box box : boxes) {
+                if (player.intersects(box.getBounds())) {
+                    player.handleCollision(box.getBounds(), "box");
                 }
             }
 
@@ -249,26 +257,18 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
         repaint();
     }
-    
- // Método para reiniciar la posición de los enemigos
-    private void resetEnemies() {
-        createPlatforms(currentLevel);  // Reiniciar los enemigos a su posición original
-    }
 
     private void resetLevel() {
         player.respawn();
-        levelWidth = 2500;
         createPlatforms(currentLevel);
-
-        System.out.println("Avanzaste al nivel " + currentLevel);
+        createEnemies(currentLevel);
+        createBoxes(currentLevel); // Asegúrate de que se llamen al reiniciar el nivel
     }
-
- // En la clase GamePanel
 
     @Override
     public void keyPressed(KeyEvent e) {
         if (gameOver && e.getKeyCode() == KeyEvent.VK_ENTER) {
-            resetGame(); // Llama al método para reiniciar el juego
+            resetGame();
         } else {
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                 player.setVelX(-5);
@@ -282,21 +282,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
     }
 
-    // Método para reiniciar el juego
     private void resetGame() {
-        playerLives = 3; 
+        playerLives = 3;
         currentLevel = 1;
-        gameOver = false; 
-        player.respawn(); 
-        createPlatforms(currentLevel); 
-        createPlatforms(currentLevel); 
-        holes.clear(); 
-        holes.add(new Rectangle(900, groundLevel - 200, 100, 200)); 
-        flag = new Flag(levelWidth - 800, groundLevel - 180);
-        cameraX = 0; 
+        gameOver = false;
+        player.respawn();
+        resetLevel();
+        cameraX = 0;
         repaint();
     }
-
 
     @Override
     public void keyReleased(KeyEvent e) {
@@ -336,12 +330,12 @@ class Player {
         if (y > 350) {
             y = 350;
             velY = 0;
-            jumpsLeft = 0; // Restablecer saltos cuando el jugador toca el suelo
+            jumpsLeft = 0; // Reset jumps when the player touches the ground
         }
     }
 
     public void jump() {
-        if (jumpsLeft == 0) { // Permitir solo un salto
+        if (jumpsLeft == 0) { // Allow only one jump
             velY = JUMP_STRENGTH;
             jumpsLeft++;
         }
@@ -380,27 +374,21 @@ class Player {
         return new Rectangle(x, y, width, height).intersects(r);
     }
 
-    public void handleCollision(Rectangle r, String type) {
-        Rectangle playerBounds = new Rectangle(x, y, width, height);
-
-        // Colisión desde arriba
-        if (velY > 0 && playerBounds.getMaxY() > r.getY() && playerBounds.getMaxY() - r.getY() <= velY + 5) {
-            y = (int) r.getY() - height;
-            velY = 0;
-            jumpsLeft = 0; // Solo un salto permitido
-        }
-        // Colisión desde abajo
-        else if (velY < 0 && playerBounds.getY() < r.getMaxY() && r.getMaxY() - playerBounds.getY() <= Math.abs(velY) + 5) {
-            y = (int) r.getMaxY();
-            velY = 0;
-        }
-        // Colisión desde la izquierda
-        else if (velX > 0 && playerBounds.getMaxX() > r.getX() && playerBounds.getMaxX() - r.getX() <= velX + 5) {
-            x = (int) r.getX() - width;
-        }
-        // Colisión desde la derecha
-        else if (velX < 0 && playerBounds.getX() < r.getMaxX() && r.getMaxX() - playerBounds.getX() <= Math.abs(velX) + 5) {
-            x = (int) r.getMaxX();
+    public void handleCollision(Rectangle bounds, String type) {
+        
+        if (type.equals("platform")) {
+           
+            if (y + height - velY <= bounds.y) {
+                y = bounds.y - height;
+                velY = 0;
+                jumpsLeft = 0;
+            }
+           
+            else if (y + height > bounds.y && y < bounds.y + bounds.height && velY < 0) {
+               
+                y = bounds.y + bounds.height;
+                velY = 0;
+            }
         }
     }
 
@@ -408,69 +396,105 @@ class Player {
     public void respawn() {
         x = initialX;
         y = initialY;
-        velY = 0;
     }
 }
 
 class Enemy {
     private int x, y;
-    private int size = 50;
-    private int velX = 2; // Velocidad horizontal
-    private boolean movingRight = true;
+    private int width = 30;
+    private int height = 30;
+    private boolean isMoving;
+    private int moveDirection = 1; // 1 para derecha, -1 para izquierda
+    private int moveSpeed = 2;
+    private Platform currentPlatform;
 
-    public Enemy(int x, int y) {
+    public Enemy(int x, int y, boolean isMoving) {
+        this.x = x;
+        this.y = y;
+        this.isMoving = isMoving;
+    }
+
+    public void update(ArrayList<Platform> platforms, ArrayList<Box> boxes, int levelWidth) {
+        if (isMoving) {
+            if (currentPlatform == null) {
+                findPlatform(platforms);
+            }
+
+            if (currentPlatform != null) {
+                // Mover solo dentro de los límites de la plataforma
+                x += moveDirection * moveSpeed;
+
+                // Verificar si el enemigo llegó al borde de la plataforma
+                if (x <= currentPlatform.getBounds().x || 
+                    x + width >= currentPlatform.getBounds().x + currentPlatform.getBounds().width) {
+                    moveDirection *= -1;
+                    x = Math.max(currentPlatform.getBounds().x, 
+                         Math.min(x, currentPlatform.getBounds().x + currentPlatform.getBounds().width - width));
+                }
+
+                // Mantener el enemigo sobre la plataforma
+                y = currentPlatform.getBounds().y - height;
+            } else {
+                // Si no está en una plataforma, mover libremente y verificar colisiones con los bordes del nivel
+                x += moveDirection * moveSpeed;
+                if (x <= 0 || x + width >= levelWidth) {
+                    moveDirection *= -1;
+                }
+            }
+
+            // Verificar colisiones con las cajas
+            for (Box box : boxes) {
+                if (getBounds().intersects(box.getBounds())) {
+                    moveDirection *= -1; // Cambiar dirección
+                    break; // Salir del bucle al colisionar con una caja
+                }
+            }
+        }
+    }
+
+    private void findPlatform(ArrayList<Platform> platforms) {
+        for (Platform platform : platforms) {
+            if (x >= platform.getBounds().x && 
+                x + width <= platform.getBounds().x + platform.getBounds().width &&
+                y + height <= platform.getBounds().y + 5 && 
+                y + height >= platform.getBounds().y - 5) {
+                currentPlatform = platform;
+                y = platform.getBounds().y - height;
+                break;
+            }
+        }
+    }
+
+    public void draw(Graphics g) {
+        g.setColor(Color.RED);
+        g.fillRect(x, y, width, height);
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height);
+    }
+}
+
+
+class Flag {
+    private int x, y;
+    private int width = 30;
+    private int height = 60;
+
+    public Flag(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public void update(ArrayList<Platform> platforms, ArrayList<Box> boxes) {
-        // Movimiento horizontal
-        if (movingRight) {
-            x += velX;
-        } else {
-            x -= velX;
-        }
-
-        // Colisiones con plataformas
-        boolean onPlatform = false;
-        for (Platform platform : platforms) {
-            Rectangle platformBounds = platform.getBounds();
-            if (x + size > platformBounds.x && x < platformBounds.x + platformBounds.width &&
-                y + size == platformBounds.y) {
-                onPlatform = true;
-                if (x <= platformBounds.x || x + size >= platformBounds.x + platformBounds.width) {
-                    movingRight = !movingRight;
-                }
-                break;
-            }
-        }
-
-        // Colisiones con cajas
-        for (Box box : boxes) {
-            if (new Rectangle(x, y, size, size).intersects(box.getBounds())) {
-                movingRight = !movingRight; // Cambiar de dirección al colisionar con una caja
-            }
-        }
-
-        // Si no está en plataforma, moverse por el suelo
-        if (!onPlatform) {
-            if (x <= 0 || x + size >= 2500) { // Limites del nivel
-                movingRight = !movingRight;
-            }
-        }
-    }
-
-
     public void draw(Graphics g) {
-        g.setColor(Color.RED);
-        g.fillRect(x, y, size, size);
+        g.setColor(Color.GREEN);
+        g.fillRect(x, y, width, height);
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y, size, size);
+        return new Rectangle(x, y, width, height);
     }
 }
-
 
 class Platform {
     private int x, y, width, height;
@@ -482,18 +506,8 @@ class Platform {
         this.height = height;
     }
 
-    public int getWidth() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public int getX() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public void draw(Graphics g) {
-        g.setColor(Color.GREEN);
+    public void draw(Graphics g) {
+        g.setColor(Color.GRAY);
         g.fillRect(x, y, width, height);
     }
 
@@ -513,30 +527,11 @@ class Box {
     }
 
     public void draw(Graphics g) {
-        g.setColor(Color.ORANGE);
+        g.setColor(Color.YELLOW);
         g.fillRect(x, y, width, height);
     }
 
     public Rectangle getBounds() {
         return new Rectangle(x, y, width, height);
-    }
-}
-
-
-class Flag {
-    private int x, y;
-
-    public Flag(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void draw(Graphics g) {
-        g.setColor(Color.YELLOW);
-        g.fillRect(x, y, 10, 30);
-    }
-
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, 10, 30);
     }
 }

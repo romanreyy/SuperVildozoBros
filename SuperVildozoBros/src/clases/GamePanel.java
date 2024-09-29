@@ -1,3 +1,4 @@
+
 package clases;
 
 import java.awt.*;
@@ -29,7 +30,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private int levelWidth = 2500;
     private int groundLevel = 400;
     private int platformHeight = 20;
-    private int currentLevel = 3;
+    private int currentLevel = 1;
 
     public GamePanel() {
         setFocusable(true);
@@ -92,6 +93,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 platforms.add(new Platform(1600, groundLevel - 250, 150, platformHeight));
 
                 break;
+                
+            case 4:
+            	platforms.add(new MovingPlatform(200, groundLevel - 100, 150, platformHeight, 200, 500)); // Límite entre 200 y 400
+            	platforms.add(new MovingPlatform(650, groundLevel - 150, 150, platformHeight, 650, 900)); // Límite entre 600 y 800
+            	platforms.add(new MovingPlatform(1000, groundLevel - 180, 150, platformHeight, 1000, 1300)); // Límite entre 1000 y 1200
+            	platforms.add(new MovingPlatform(1450, groundLevel - 200, 150, platformHeight, 1450, 1800)); // Límite entre 1400 y 1600
+                break;
         }
     }
     
@@ -105,6 +113,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             boxes.add(new Box(1200, groundLevel - 50, 50, 50)); // Ajusté la posición Y
             boxes.add(new Box(1500, groundLevel - 50, 50, 50)); // Ajusté la posición Y
             boxes.add(new Box(1900, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+        }
+        
+        if(currentLevel == 4) {
+            boxes.add(new Box(300, groundLevel - 50, 50, 50));
         }
     }
 
@@ -161,6 +173,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 enemies.add(new Enemy(2300, groundLevel - 30, true));
                 enemies.add(new Enemy(2400, groundLevel - 30, true));
                 break;
+                
+            case 4:
+            	enemies.add(new Enemy(200, groundLevel - 135, true));
+
         }
     }
 
@@ -248,7 +264,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                     inHole = false; // No lose lives for falling into the hole
                 }
             }
-
+            
+         // Actualizar plataformas
+            for (Platform platform : platforms) {
+                if (platform instanceof MovingPlatform) {
+                    ((MovingPlatform) platform).update(); // Llamar el método update de la plataforma móvil
+                }
+            }
+            
 
             if (player.intersects(flag.getBounds())) {
                 currentLevel++;
@@ -534,7 +557,7 @@ class Flag {
 }
 
 class Platform {
-    private int x, y, width, height;
+    protected int x, y, width, height;
 
     public Platform(int x, int y, int width, int height) {
         this.x = x;
@@ -542,7 +565,11 @@ class Platform {
         this.width = width;
         this.height = height;
     }
-
+    
+    public void update() {
+        // Método vacío, puede ser sobrescrito en subclases
+    }
+    
     public void draw(Graphics g) {
         g.setColor(Color.GRAY);
         g.fillRect(x, y, width, height);
@@ -552,6 +579,35 @@ class Platform {
         return new Rectangle(x, y, width, height);
     }
 }
+
+class MovingPlatform extends Platform {
+    private int moveDirection = 1; // 1 para mover a la derecha, -1 para izquierda
+    private int speed = 1;
+    private int minX; // Límite izquierdo
+    private int maxX; // Límite derecho
+
+    // Modificar el constructor para incluir los límites
+    public MovingPlatform(int x, int y, int width, int height, int minX, int maxX) {
+        super(x, y, width, height);
+        this.minX = minX;
+        this.maxX = maxX;
+    }
+
+    @Override
+    public void update() {
+        // Mueve la plataforma
+        x += moveDirection * speed;
+
+        // Cambiar dirección si toca los bordes del rango
+        if (x < minX || x + width > maxX) {
+            moveDirection *= -1; // Cambiar dirección
+        }
+    }
+}
+
+
+
+
 
 class Box {
     private int x, y, width, height;

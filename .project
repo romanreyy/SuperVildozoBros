@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>SuperVildozoBros/src/resources/Dona.png</name>
+			<type>1</type>
+			<location>/Users/romanrey/Downloads/Dona.png</location>
+		</link>
+	</linkedResources>
 </projectDescription>

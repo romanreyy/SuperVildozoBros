@@ -34,7 +34,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private int levelWidth = 2500;
     private int groundLevel = 400;
     private int platformHeight = 20;
-    private int currentLevel = 4;
+    private int currentLevel = 1;
 
      public GamePanel() {
         setFocusable(true);
@@ -99,16 +99,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 break;
 
             case 4:
-            	platforms.add(new MovingPlatform(200, groundLevel - 100, 150, platformHeight, 200, 450)); // LÃ­mite entre 200 y 400
-            	platforms.add(new MovingPlatform(650, groundLevel - 150, 150, platformHeight, 550, 900)); // LÃ­mite entre 600 y 800
-            	platforms.add(new MovingPlatform(1000, groundLevel - 180, 150, platformHeight, 1000, 1300)); // LÃ­mite entre 1000 y 1200
-            	platforms.add(new MovingPlatform(1450, groundLevel - 170, 150, platformHeight, 1450, 1800)); // LÃ­mite entre 1400 y 1600
-            	platforms.add(new MovingPlatform(2000, groundLevel - 170, 150, platformHeight, 1450, 1800)); // LÃ­mite entre 1400 y 1600
+            platforms.add(new MovingPlatform(200, groundLevel - 100, 150, platformHeight, 200, 450)); // Límite entre 200 y 400
+            platforms.add(new MovingPlatform(650, groundLevel - 150, 150, platformHeight, 550, 900)); // Límite entre 600 y 800
+            platforms.add(new MovingPlatform(1000, groundLevel - 180, 150, platformHeight, 1000, 1300)); // Límite entre 1000 y 1200
+            platforms.add(new MovingPlatform(1450, groundLevel - 170, 150, platformHeight, 1450, 1800)); // Límite entre 1400 y 1600
+            platforms.add(new MovingPlatform(2000, groundLevel - 170, 150, platformHeight, 1450, 1800)); // Límite entre 1400 y 1600
 
                 break;
-                
+               
             case 5:
-            	levelWidth = 2000;
+            levelWidth = 2000;
                 flag = new Flag(2000, groundLevel - 180);
                 // Plataformas para que el jugador pueda saltar y esquivar disparos
                 platforms.add(new Platform(200, groundLevel - 100, 150, platformHeight));
@@ -120,7 +120,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 platforms.add(new Platform(1200, groundLevel - 200, 300, platformHeight)); // Plataforma alta
                 platforms.add(new Platform(1500, groundLevel - 250, 200, platformHeight)); // Otra plataforma alta para saltar
 
-                boss = new Boss(1200, groundLevel - 200); // Ajustado la posiciÃ³n vertical del jefe
+                boss = new Boss(1200, groundLevel - 200); // Ajustado la posición vertical del jefe
                 break;
 
         }
@@ -129,31 +129,31 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private void createBoxes(int currentLevel) {
         boxes.clear();
         if (currentLevel == 3) {
-            // AsegÃºrate de que la posiciÃ³n Y sea correcta y visible
-            boxes.add(new Box(300, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y
-            boxes.add(new Box(600, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y
-            boxes.add(new Box(900, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y
-            boxes.add(new Box(1200, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y+
-            boxes.add(new Box(1500, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y
-            boxes.add(new Box(1900, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y
+            // Asegúrate de que la posición Y sea correcta y visible
+            boxes.add(new Box(300, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(600, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(900, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(1200, groundLevel - 50, 50, 50)); // Ajusté la posición Y+
+            boxes.add(new Box(1500, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(1900, groundLevel - 50, 50, 50)); // Ajusté la posición Y
         }
 
         if(currentLevel == 4) {
-        	boxes.add(new Box(500, groundLevel - 50, 50, 50));
+        boxes.add(new Box(500, groundLevel - 50, 50, 50));
             boxes.add(new Box(925, groundLevel - 250, 50, 50));
             boxes.add(new Box(1350, groundLevel - 50, 50, 50));
 
         }
-        
+       
         if(currentLevel == 5) {
-        	boxes.add(new Box(300, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y
-            boxes.add(new Box(600, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y
-            boxes.add(new Box(900, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y
-            boxes.add(new Box(1200, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y+
-            boxes.add(new Box(1500, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y
-            boxes.add(new Box(1900, groundLevel - 50, 50, 50)); // AjustÃ© la posiciÃ³n Y
-            boxes.add(new Box(1250, groundLevel - 250, 50, 50)); // AjustÃ© la posiciÃ³n Y+
-            boxes.add(new Box(1560, groundLevel - 300, 50, 50)); // AjustÃ© la posiciÃ³n Y+
+        boxes.add(new Box(300, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(600, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(900, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(1200, groundLevel - 50, 50, 50)); // Ajusté la posición Y+
+            boxes.add(new Box(1500, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(1900, groundLevel - 50, 50, 50)); // Ajusté la posición Y
+            boxes.add(new Box(1250, groundLevel - 250, 50, 50)); // Ajusté la posición Y+
+            boxes.add(new Box(1560, groundLevel - 300, 50, 50)); // Ajusté la posición Y+
         }
     }
 
@@ -186,7 +186,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 enemies.add(new Enemy(900, groundLevel - 30, false));  // En la cuarta plataforma
                 enemies.add(new Enemy(1200, groundLevel - 235, true)); // En la quinta plataforma
                 enemies.add(new Enemy(1500, groundLevel - 285, true)); // En la sexta plataforma
-                enemies.add(new Enemy(1800, groundLevel - 135, true)); // En la sÃ©ptima plataforma
+                enemies.add(new Enemy(1800, groundLevel - 135, true)); // En la séptima plataforma
                 enemies.add(new Enemy(2000, groundLevel - 185, true)); // En la octava plataforma
                 enemies.add(new Enemy(2200, groundLevel - 235, true)); // En la novena plataforma
                 enemies.add(new Enemy(2400, groundLevel - 135, true));
@@ -213,7 +213,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 //Los que la X vale 900 son los que estan adentro del rectangulo
             case 4:
 
-            	//En plataformas
+            //En plataformas
                 enemies.add(new Enemy(200, groundLevel - 135, true));
                 enemies.add(new Enemy(650, groundLevel - 185, true));  // En la segunda plataforma
                 enemies.add(new Enemy(1450, groundLevel - 200, true));  // En la segunda plataforma
@@ -245,14 +245,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 enemies.add(new Enemy(500, groundLevel - 30, true));  // En la segunda plataforma
 
                 break;
-                
+               
             case 5:
-            	enemies.add(new Enemy(210, groundLevel - 135, true));  // En la primera plataforma
+            enemies.add(new Enemy(210, groundLevel - 135, true));  // En la primera plataforma
                 enemies.add(new Enemy(550, groundLevel - 185, true));  // En la segunda plataforma
                 enemies.add(new Enemy(400, groundLevel - 30, true));
                 enemies.add(new Enemy(700, groundLevel - 30, true));
                 enemies.add(new Enemy(600, groundLevel - 330, true));
-            	break;
+            break;
         }
     }
 
@@ -284,7 +284,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             g.drawString("Game Over", getWidth() / 2 - 40, getHeight() / 2);
             return;
         }
-        
+       
         g.translate(-cameraX, 0);
         player.draw(g);
         for (Enemy enemy : enemies) {
@@ -296,7 +296,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         for (Box box : boxes) {
             box.draw(g);
         }
-        
+       
         if (currentLevel == 5 && !bossDefeated) {
             boss.draw(g);
         }
@@ -305,13 +305,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             g.setColor(Color.BLACK);
             g.fillRect(hole.x, hole.y, hole.width, hole.height);
         }
-        
+       
         if (currentLevel == 5 && !specialCoin.isCollected()) {
             specialCoin.draw(g);
         }
         player.drawBullets(g);
         flag.draw(g);
-        
+       
         if (gameWon) {
             g.setColor(Color.GREEN);
             g.setFont(new Font("Arial", Font.BOLD, 50));
@@ -326,9 +326,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!gameOver) {
-            // Actualizar la posiciÃ³n del jugador y los disparos
-            player.update(boss, boxes);
+        // Actualizar la posición del jugador y los disparos
+            player.update(boss, boxes, specialCoin);
             player.updateBullets();
+
+            // Actualizar el jefe si estamos en el nivel 5 y no ha sido derrotado
+            if (currentLevel == 5 && !bossDefeated) {
+                boss.update(player, boxes);  // Añadido: actualizar el jefe
+            }
 
             // Manejo de colisiones con el jefe
             if (currentLevel == 5 && !bossDefeated) {
@@ -344,19 +349,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             // Manejo de colisiones con la bandera
             handleFlagCollision();
 
-            // Actualizar plataformas mÃ³viles
+            // Actualizar plataformas móviles
             updateMovingPlatforms();
 
             // Manejo de agujeros (holes)
             handleHoles();
 
-            // Actualizar posiciÃ³n de la cÃ¡mara
+            // Actualizar posición de la cámara
             updateCameraPosition();
         }
         repaint();
     }
 
-    // MÃ©todo separado para manejar colisiones con el jefe
+    // Método separado para manejar colisiones con el jefe
     private void handleBossCollisions() {
         for (Projectile p : boss.getProjectiles()) {
             if (player.intersects(p.getBounds())) {
@@ -377,14 +382,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
                 player.getBullets().remove(bullet);
                 if (boss.isDead()) {
                     bossDefeated = true;
-                    System.out.println("Â¡Jefe derrotado!"); // Para depuraciÃ³n
+                    System.out.println("¡Jefe derrotado!"); // Para depuración
                 }
-                break; // Salir despuÃ©s de golpear al jefe
+                break; // Salir después de golpear al jefe
             }
         }
     }
 
-    // MÃ©todo para manejar colisiones con enemigos
+    // Método para manejar colisiones con enemigos
     private void handleEnemyCollisions() {
         boolean playerHit = false;
         for (Enemy enemy : enemies) {
@@ -404,7 +409,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
     }
 
-    // MÃ©todo para manejar colisiones con plataformas
+    // Método para manejar colisiones con plataformas
     private void handlePlatformCollisions() {
         for (Platform platform : platforms) {
             if (player.intersects(platform.getBounds())) {
@@ -413,14 +418,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
     }
 
- // MÃ©todo para manejar colisiones con la bandera
+ // Método para manejar colisiones con la bandera
     private void handleFlagCollision() {
         if (player.intersects(flag.getBounds())) {
             // Verifica si el jefe ha sido derrotado en el nivel 5
             if (currentLevel == 5 && bossDefeated) {
                 currentLevel++;
-                gameWon = true; // El jugador ganÃ³ el juego
-                System.out.println("Â¡Juego ganado!"); // Mensaje de victoria
+                gameWon = true; // El jugador ganó el juego
+                System.out.println("¡Juego ganado!"); // Mensaje de victoria
             } else if (currentLevel < 5) {
                 // Si no es el nivel 5, simplemente avanza al siguiente nivel
                 currentLevel++;
@@ -430,16 +435,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     }
 
 
-    // MÃ©todo para actualizar plataformas mÃ³viles
+    // Método para actualizar plataformas móviles
     private void updateMovingPlatforms() {
         for (Platform platform : platforms) {
             if (platform instanceof MovingPlatform) {
-                ((MovingPlatform) platform).update(); // Llamar el mÃ©todo update de la plataforma mÃ³vil
+                ((MovingPlatform) platform).update(); // Llamar el método update de la plataforma móvil
             }
         }
     }
 
-    // MÃ©todo para manejar agujeros
+    // Método para manejar agujeros
     private void handleHoles() {
         boolean inHole = false;
         for (Rectangle hole : holes) {
@@ -449,7 +454,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
     }
 
-    // MÃ©todo para actualizar la posiciÃ³n de la cÃ¡mara
+    // Método para actualizar la posición de la cámara
     private void updateCameraPosition() {
         cameraX = player.getX() - getWidth() / 2 + player.getWidth() / 2;
         if (cameraX < 0) cameraX = 0;
@@ -457,7 +462,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     }
 
 
-    
+   
     private void playerHit() {
         playerLives--;
         player.respawn();
@@ -470,9 +475,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         player.respawn();
         createPlatforms(currentLevel);
         createEnemies(currentLevel);
-        createBoxes(currentLevel); // AsegÃºrate de que se llamen al reiniciar el nivel
+        createBoxes(currentLevel); // Asegúrate de que se llamen al reiniciar el nivel
         if (currentLevel == 5) {
-            boss = new Boss(levelWidth - 300, groundLevel - 200); // Ajustado la posiciÃ³n vertical
+            boss = new Boss(levelWidth - 300, groundLevel - 200); // Ajustado la posición vertical
             bossDefeated = false;
         }
         if (currentLevel == 5) {
@@ -542,7 +547,7 @@ class Player {
         this.initialY = y;
     }
 
-    public void update(Boss boss, ArrayList<Box> boxes) {
+    public void update(Boss boss, ArrayList<Box> boxes, Coin coin) {
         x += velX;
         y += velY;
 
@@ -552,25 +557,25 @@ class Player {
         if (y > 350) {
             y = 350;
             velY = 0;
-            jumpsLeft = 0; // Reiniciar saltos cuando el jugador toca el suelo
+            jumpsLeft = 0;
         }
 
         // Verificar colisiones con las balas
         for (int i = bullets.size() - 1; i >= 0; i--) {
             Bullet bullet = bullets.get(i);
-            
-            // Verificar colisiÃ³n con el jefe
+           
+            // Verificar colisión con el jefe
             if (boss.intersects(bullet.getBounds())) {
-                boss.damageBoss();  // Reducir la vida del jefe en 1
-                bullets.remove(i);  // Eliminar la bala si colisiona
-                continue; // Continuar al siguiente bullet
+                boss.damageBoss();
+                bullets.remove(i);
+                continue;
             }
 
-            // Verificar colisiÃ³n con las cajas
+            // Verificar colisión con las cajas
             for (Box box : boxes) {
                 if (bullet.getBounds().intersects(box.getBounds())) {
-                    bullets.remove(i);  // Eliminar la bala si colisiona con una caja
-                    break;  // Salir del bucle al colisionar
+                    bullets.remove(i);
+                    break;
                 }
             }
         }
@@ -581,7 +586,14 @@ class Player {
                 handleCollision(box.getBounds(), "box");
             }
         }
-    }	
+
+        // Verificar colisión con la moneda
+        if (coin != null && !coin.isCollected() && this.intersects(coin.getBounds())) {
+            coin.collect();         // Recoger la moneda
+            enableShooting();       // Habilitar disparo
+        }
+    }
+
 
     public void jump() {
         if (jumpsLeft == 0) { // Permitir solo un salto
@@ -618,7 +630,7 @@ class Player {
     public int getVelY() {
         return velY;
     }
-    
+   
     public void enableShooting() {
         canShoot = true;
     }
@@ -652,22 +664,22 @@ class Player {
     public boolean intersects(Rectangle r) {
         return new Rectangle(x, y, width, height).intersects(r);
     }
-    
+   
     public Rectangle getBounds() {
         return new Rectangle(x, y, width, height);
     }
 
-    // MÃ©todo para manejar colisiones con plataformas y cajas
+    // Método para manejar colisiones con plataformas y cajas
     public void handleCollision(Rectangle bounds, String type) {
         // Colisiones con plataformas
         if (type.equals("platform")) {
             if (y + height - velY <= bounds.y) {
-                // ColisiÃ³n por arriba de la plataforma
+                // Colisión por arriba de la plataforma
                 y = bounds.y - height;
                 velY = 0;
                 jumpsLeft = 0;
             } else if (y + height > bounds.y && y < bounds.y + bounds.height && velY < 0) {
-                // ColisiÃ³n por debajo de la plataforma
+                // Colisión por debajo de la plataforma
                 y = bounds.y + bounds.height;
                 velY = 0;
             }
@@ -675,27 +687,27 @@ class Player {
 
         // Colisiones con cajas
         if (type.equals("box")) {
-            // ColisiÃ³n por arriba de la caja
+            // Colisión por arriba de la caja
             if (y + height - velY <= bounds.y) {
                 y = bounds.y - height;
                 velY = 0;
                 jumpsLeft = 0; // Reiniciar saltos
             }
-            // ColisiÃ³n por la izquierda o derecha de la caja
+            // Colisión por la izquierda o derecha de la caja
             else if (x + width > bounds.x && x < bounds.x + bounds.width) {
-                // ColisiÃ³n por la izquierda
+                // Colisión por la izquierda
                 if (x + width - velX <= bounds.x) {
-                    x = bounds.x - width; // Ajustar posiciÃ³n
+                    x = bounds.x - width; // Ajustar posición
                 }
-                // ColisiÃ³n por la derecha
+                // Colisión por la derecha
                 else if (x - velX >= bounds.x + bounds.width) {
-                    x = bounds.x + bounds.width; // Ajustar posiciÃ³n
+                    x = bounds.x + bounds.width; // Ajustar posición
                 }
             }
         }
     }
 
-    // MÃ©todo para reubicar al jugador en su posiciÃ³n inicial
+    // Método para reubicar al jugador en su posición inicial
     public void respawn() {
         x = initialX;
         y = initialY;
@@ -755,10 +767,10 @@ class Enemy {
             }
 
             if (currentPlatform != null) {
-                // Mover solo dentro de los lÃ­mites de la plataforma
+                // Mover solo dentro de los límites de la plataforma
                 x += moveDirection * moveSpeed;
 
-                // Verificar si el enemigo llegÃ³ al borde de la plataforma
+                // Verificar si el enemigo llegó al borde de la plataforma
                 if (x <= currentPlatform.getBounds().x ||
                         x + width >= currentPlatform.getBounds().x + currentPlatform.getBounds().width) {
                     moveDirection *= -1;
@@ -769,7 +781,7 @@ class Enemy {
                 // Mantener el enemigo sobre la plataforma
                 y = currentPlatform.getBounds().y - height;
             } else {
-                // Si no estÃ¡ en una plataforma, mover libremente y verificar colisiones con los bordes del nivel
+                // Si no está en una plataforma, mover libremente y verificar colisiones con los bordes del nivel
                 x += moveDirection * moveSpeed;
                 if (x <= 0 || x + width >= levelWidth) {
                     moveDirection *= -1;
@@ -779,7 +791,7 @@ class Enemy {
             // Verificar colisiones con las cajas
             for (Box box : boxes) {
                 if (getBounds().intersects(box.getBounds())) {
-                    moveDirection *= -1; // Cambiar direcciÃ³n
+                    moveDirection *= -1; // Cambiar dirección
                     break; // Salir del bucle al colisionar con una caja
                 }
             }
@@ -841,7 +853,7 @@ class Platform {
     }
 
     public void update() {
-        // MÃ©todo vacÃ­o, puede ser sobrescrito en subclases
+        // Método vacío, puede ser sobrescrito en subclases
     }
 
     public void draw(Graphics g) {
@@ -857,10 +869,10 @@ class Platform {
 class MovingPlatform extends Platform {
     private int moveDirection = 1; // 1 para mover a la derecha, -1 para izquierda
     private int speed = 1;
-    private int minX; // LÃ­mite izquierdo
-    private int maxX; // LÃ­mite derecho
+    private int minX; // Límite izquierdo
+    private int maxX; // Límite derecho
 
-    // Modificar el constructor para incluir los lÃ­mites
+    // Modificar el constructor para incluir los límites
     public MovingPlatform(int x, int y, int width, int height, int minX, int maxX) {
         super(x, y, width, height);
         this.minX = minX;
@@ -872,9 +884,9 @@ class MovingPlatform extends Platform {
         // Mueve la plataforma
         x += moveDirection * speed;
 
-        // Cambiar direcciÃ³n si toca los bordes del rango
+        // Cambiar dirección si toca los bordes del rango
         if (x < minX || x + width > maxX) {
-            moveDirection *= -1; // Cambiar direcciÃ³n
+            moveDirection *= -1; // Cambiar dirección
         }
     }
 }
@@ -934,7 +946,7 @@ class Boss {
 
     public void update(Player player, ArrayList<Box> boxes) {
         if (!isAlive) {
-            return; // Si el jefe no estÃ¡ vivo, no hacemos nada
+            return;
         }
 
         playerVisible = isPlayerVisible(player);
@@ -966,22 +978,17 @@ class Boss {
             Projectile p = projectiles.get(i);
             p.update();
 
-            // Verificar colisiÃ³n con las cajas
+            // Verificar colisión con las cajas
             for (Box box : boxes) {
                 if (p.getBounds().intersects(box.getBounds())) {
-                    projectiles.remove(i);  // Eliminar la bala si colisiona con una caja
-                    break;  // Salir del bucle
+                    projectiles.remove(i);
+                    break;
                 }
             }
 
             if (p.isOutOfBounds()) {
                 projectiles.remove(i);
             }
-        }
-
-        // Verificar si el jefe ha recibido daÃ±o
-        if (health <= 0) {
-            isAlive = false; // Marcar al jefe como muerto
         }
 
         // Actualizar ataques especiales
@@ -1002,40 +1009,40 @@ class Boss {
     }
 
     private void shoot(Player player) {
-        // Generar un Ã¡ngulo aleatorio para el disparo, limitando a que siempre vaya hacia la izquierda
+        // Generar un ángulo aleatorio para el disparo, limitando a que siempre vaya hacia la izquierda
         double randomAngleOffset = Math.toRadians(random.nextInt(30) - 15); // Un rango de -15 a +15 grados
         double dx = -(random.nextInt(100) + 50);  // Aseguramos que siempre vaya hacia la izquierda
         double dy = random.nextInt(20) - 10; // Movimiento vertical aleatorio entre -10 y +10
 
-        double angle = Math.atan2(dy, dx);  // Calcular el Ã¡ngulo con el desplazamiento aleatorio
-        projectiles.add(new Projectile(x + width / 2, y + height / 2, angle));  // Crear la bala con ese Ã¡ngulo
+        double angle = Math.atan2(dy, dx);  // Calcular el ángulo con el desplazamiento aleatorio
+        projectiles.add(new Projectile(x + width / 2, y + height / 2, angle));  // Crear la bala con ese ángulo
     }
 
 
     private void launchSpecialAttack(Player player) {
-        // Calcular la direcciÃ³n hacia el jugador
+        // Calcular la dirección hacia el jugador
         double dx = player.getX() - (x + width / 2);
         double dy = player.getY() - (y + height / 2);
-        
-        // Ajustar el Ã¡ngulo para una trayectoria mÃ¡s alta
-        double angle = Math.atan2(dy, dx) - Math.PI / 3;  // Cambiamos de PI/4 a PI/3 para una trayectoria mÃ¡s alta
-        
-        // Aumentar significativamente la velocidad inicial para que la bomba llegue mÃ¡s lejos
+       
+        // Ajustar el ángulo para una trayectoria más alta
+        double angle = Math.atan2(dy, dx) - Math.PI / 3;  // Cambiamos de PI/4 a PI/3 para una trayectoria más alta
+       
+        // Aumentar significativamente la velocidad inicial para que la bomba llegue más lejos
         double initialSpeed = 15;  // Aumentado de 15 a 25
-        
+       
         specialAttacks.add(new Bomb(x + width / 2, y + height / 2, 30, angle, initialSpeed, player));
     }
 
     public void draw(Graphics g) {
-    	
-    	if (isAlive) { // Solo dibujar si el jefe estÃ¡ vivo
+   
+    if (isAlive) { // Solo dibujar si el jefe está vivo
             g.setColor(Color.MAGENTA);
             g.fillRect(x, y, width, height);
-    	}
+    }
 
         // Dibuja el marcador de salud encima del jefe
         g.setColor(Color.BLACK);
-        g.drawString("Vida: " + health, x + width / 2 - 15, y - 10); // Ajusta la posiciÃ³n segÃºn sea necesario
+        g.drawString("Vida: " + health, x + width / 2 - 15, y - 10); // Ajusta la posición según sea necesario
 
         g.setColor(Color.RED);
         g.fillRect(x, y - 20, width, 10);
@@ -1045,7 +1052,7 @@ class Boss {
         for (Projectile p : projectiles) {
             p.draw(g, playerVisible, health, health, health);
         }
-        
+       
         for (SpecialAttack sa : specialAttacks) {
             sa.draw(g);
         }
@@ -1060,7 +1067,7 @@ class Boss {
     }
 
 
- // Supongamos que este es tu mÃ©todo para manejar el daÃ±o al jefe
+ // Supongamos que este es tu método para manejar el daño al jefe
     public void damageBoss() {
         health--; // Reducir la vida del jefe
         if (health <= 0) {
@@ -1071,7 +1078,7 @@ class Boss {
 
     private void showWinMessage() {
         // Usamos JOptionPane para mostrar un mensaje
-        int response = JOptionPane.showConfirmDialog(null, "Â¡Ganaste!", "Victoria", JOptionPane.OK_CANCEL_OPTION);
+        int response = JOptionPane.showConfirmDialog(null, "¡Ganaste!", "Victoria", JOptionPane.OK_CANCEL_OPTION);
         if (response == JOptionPane.OK_OPTION) {
             System.exit(0); // Cierra el programa
         }
@@ -1097,17 +1104,17 @@ class Boss {
 class Projectile {
     private double x, y;
     private double speed = 4; // Velocidad constante
-    private double angle;  // Ãngulo calculado al inicio
-    private int size = 20; // TamaÃ±o de las balas
+    private double angle;  // Ángulo calculado al inicio
+    private int size = 20; // Tamaño de las balas
 
     public Projectile(int x, int y, double angle) {
         this.x = x;
         this.y = y;
-        this.angle = angle;  // Ãngulo calculado al inicio
+        this.angle = angle;  // Ángulo calculado al inicio
     }
 
     public void update() {
-        // Movimiento en lÃ­nea recta basado en el Ã¡ngulo
+        // Movimiento en línea recta basado en el ángulo
         x += speed * Math.cos(angle);  // Incrementa en el eje X
         y += speed * Math.sin(angle);  // Incrementa en el eje Y
     }
@@ -1118,7 +1125,7 @@ class Projectile {
     }
 
     public boolean isOutOfBounds() {
-        // CondiciÃ³n para que la bala salga de los lÃ­mites de la pantalla
+        // Condición para que la bala salga de los límites de la pantalla
         return x < 0 || x > 3000 || y < 0 || y > 800;
     }
 
@@ -1148,11 +1155,11 @@ abstract class SpecialAttack {
 
 class Bomb extends SpecialAttack {
     private int size;
-    private double speed = 1;
+    private double speed = 7;
     private double angle;
     private double vx, vy;
     private double x, y;
-    private double gravity = 0.3;  // Reducida la gravedad para permitir una trayectoria mÃ¡s alta y larga
+    private double gravity = 0.3;  // Reducida la gravedad para permitir una trayectoria más alta y larga
     private Player targetPlayer;
     private double initialVy;  // Nueva variable para recordar la velocidad vertical inicial
 
@@ -1174,15 +1181,15 @@ class Bomb extends SpecialAttack {
         x += vx;
         y += vy;
         vy += gravity;
-        
+       
         // Ajustar la trayectoria hacia el jugador solo en la fase descendente
-        if (vy > 0) {  // Si la bomba estÃ¡ cayendo
+        if (vy > 0) {  // Si la bomba está cayendo
             double dx = targetPlayer.getX() - x;
             double dy = targetPlayer.getY() - y;
             double distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
-            
+           
             // Ajustar la velocidad horizontal para seguir al jugador
-            if (distanceToPlayer > 100) {  // Solo ajustar si estÃ¡ lejos del jugador
+            if (distanceToPlayer > 100) {  // Solo ajustar si está lejos del jugador
                 vx += dx / distanceToPlayer * 0.2;  // Aumentado el factor de ajuste
             }
         }
@@ -1197,13 +1204,13 @@ class Bomb extends SpecialAttack {
     public void draw(Graphics g) {
         g.setColor(Color.RED);
         g.fillOval((int)x - size/2, (int)y - size/2, size, size);
-        
+       
         // Dibujar una "cola" para la bomba
         g.setColor(Color.ORANGE);
         for (int i = 1; i <= 5; i++) {
             int tailSize = size - i * 4;
-            g.fillOval((int)(x - vx * i) - tailSize/2, 
-                       (int)(y - vy * i) - tailSize/2, 
+            g.fillOval((int)(x - vx * i) - tailSize/2,
+                       (int)(y - vy * i) - tailSize/2,
                        tailSize, tailSize);
         }
     }
@@ -1216,9 +1223,8 @@ class Bomb extends SpecialAttack {
 
 class Coin {
     private int x, y;
-    private int width = 20;
-    private int height = 20;
-    private boolean collected = false;
+    private int size = 20;
+    private boolean collected = false;  // Para verificar si ya fue recogida
 
     public Coin(int x, int y) {
         this.x = x;
@@ -1228,12 +1234,12 @@ class Coin {
     public void draw(Graphics g) {
         if (!collected) {
             g.setColor(Color.YELLOW);
-            g.fillOval(x, y, width, height);
+            g.fillOval(x, y, size, size);
         }
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(x, y, width, height);
+        return new Rectangle(x, y, size, size);
     }
 
     public boolean isCollected() {
